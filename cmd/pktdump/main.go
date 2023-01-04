@@ -41,7 +41,7 @@ func main() {
 	// write pcap header
 	// https://datatracker.ietf.org/doc/id/draft-gharris-opsawg-pcap-00.html
 	_, _ = f.Write([]byte{
-		0xD4, 0xC3, 0xB2, 0xA1, // magic
+		0x4D, 0x3C, 0xB2, 0xA1, // magic
 		0x02, 0x00, 0x04, 0x00, // Version: 2.4
 		0x00, 0x00, 0x00, 0x00, // Reserved1
 		0x00, 0x00, 0x00, 0x00, // Reserved2
@@ -49,11 +49,13 @@ func main() {
 		0x65 /* LINKTYPE_RAW */, 0x00, 0x00, 0x00, // LinkType & FCS https://www.tcpdump.org/linktypes.html
 	})
 
+	// configure WinDivert
 	d, err = diverter.New(diverter.NewDefaultDiverterConfig("WinDivert.dll", "true"))
 	if err != nil {
 		panic(err)
 	}
 
+	// start packet capturing
 	err = d.Start()
 	if err != nil {
 		panic(err)
@@ -68,10 +70,16 @@ func main() {
 	signal.Notify(c, os.Interrupt)
 
 	for pkt := range d.RecvChan() {
-		_ = binary.Write(f, binary.LittleEndian, time.Now().UnixNano())
-		_ = binary.Write(f, binary.LittleEndian, uint32(pkt.Length)) // Captured Packet Length
-		_ = binary.Write(f, binary.LittleEndian, uint32(pkt.Length)) // Original Packet Length
+		// TODO: utilize pkt.Timestamp for more high resolution packet interval recording
+		ts := time.Now().UnixNano()
 
+		// write packet header
+		_ = binary.Write(f, binary.LittleEndian, uint32(ts/1000000000)) // timestamp (seconds)
+		_ = binary.Write(f, binary.LittleEndian, uint32(ts%1000000000)) // timestamp (nanoseconds)
+		_ = binary.Write(f, binary.LittleEndian, uint32(pkt.Length))    // Captured Packet Length
+		_ = binary.Write(f, binary.LittleEndian, uint32(pkt.Length))    // Original Packet Length
+
+		// write packet content
 		_, err = f.Write(pkt.Content)
 		if err != nil {
 			panic(err)

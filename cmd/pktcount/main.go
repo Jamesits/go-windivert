@@ -1,4 +1,5 @@
 // Counts received packets by their layer 4 protocol.
+// This is a re-implementation of https://github.com/williamfhe/godivert/blob/a48c5b872c736d3f23abaad7732528b17416341a/examples/packetCount/main.go
 // Usage:
 //
 //	pktcount

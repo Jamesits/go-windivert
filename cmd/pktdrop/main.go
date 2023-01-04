@@ -1,4 +1,5 @@
 // Drops all the packets matching a filter. If the filter is unset, it defaults to drop all packets.
+// This is a re-implementation of https://github.com/williamfhe/godivert/blob/a48c5b872c736d3f23abaad7732528b17416341a/examples/blockPackets/main.go
 // Usage:
 //
 //	pktdrop [filter]

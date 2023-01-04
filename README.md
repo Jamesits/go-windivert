@@ -2,12 +2,19 @@
 
 Go bindings for [WinDivert](https://github.com/basil00/Divert).
 
-## Installation
+## Features
+
+- WinDivert 2.2
+- Native support for [google/gopacket](https://github.com/google/gopacket) packet parsing library
+
+## Usage
 
 ```shell
 go get github.com/jamesits/go-windivert
 ```
 
-## Usage
+Examples using the high-level interface (channel based):
+- [Sniffing only](cmd/pktdump/main.go)
+- [Packet injection](cmd/pktloopback/main.go)
 
-*TBD.*
+All [Low-level interfaces](ffi/library.go) and [simple wrappers](ffi/wrapper.go) are also available for more than average needs.
