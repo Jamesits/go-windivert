@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="pktcount" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="godivert" />
+    <working_directory value="$PROJECT_DIR$" />
+    <parameters value="&quot;true&quot;" />
+    <kind value="PACKAGE" />
+    <package value="github.com/jamesits/go-windivert/cmd/pktcount" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/examples/readPacket/main.go" />
+    <method v="2" />
+  </configuration>
+</component>

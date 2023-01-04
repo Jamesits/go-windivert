@@ -1,0 +1,3 @@
+go install golang.org/x/tools/cmd/stringer@latest
+go mod tidy
+go generate ./...

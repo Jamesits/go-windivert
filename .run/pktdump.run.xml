@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="pktdump" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="godivert" />
+    <working_directory value="$PROJECT_DIR$" />
+    <parameters value="test.pcap" />
+    <kind value="PACKAGE" />
+    <package value="github.com/jamesits/go-windivert/cmd/pktdump" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/examples/readPacket/main.go" />
+    <method v="2" />
+  </configuration>
+</component>
