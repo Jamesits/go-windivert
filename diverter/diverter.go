@@ -14,18 +14,34 @@ type Diverter struct {
 	l      *ffi.LibraryReference
 	c      *Config
 	handle uintptr
+	params map[ffi.Param]uint64
 
 	openOnce sync.Once
 	routines sync.WaitGroup
+	critical sync.Mutex
+	started  bool // if a valid handle is available
 }
 
 func New(config *Config) (ret *Diverter, err error) {
 	config.fixMissingValue()
 
-	ret = &Diverter{c: config}
+	ret = &Diverter{
+		c:       config,
+		handle:  uintptr(windows.InvalidHandle),
+		params:  map[ffi.Param]uint64{},
+		started: false,
+	}
 	ret.l, err = ffi.NewDLLReference(ret.c.DLLPath)
 
 	return
+}
+
+func (d *Diverter) LibraryReference() *ffi.LibraryReference {
+	return d.l
+}
+
+func (d *Diverter) Handle() uintptr {
+	return d.handle
 }
 
 func (d *Diverter) SendChan() chan<- *ffi.Packet {
@@ -84,6 +100,9 @@ func (d *Diverter) receiveLoop() (err error) {
 
 // Start executes the event loop in a new goroutine and returns immediately
 func (d *Diverter) Start() (err error) {
+	d.critical.Lock()
+	defer d.critical.Unlock()
+
 	d.routines.Add(1)
 	defer d.routines.Done()
 
@@ -98,6 +117,13 @@ func (d *Diverter) Start() (err error) {
 		return
 	}
 
+	for k, v := range d.params {
+		err = d.l.SetParam(d.handle, k, v)
+		if err != nil {
+			return
+		}
+	}
+
 	go func() {
 		_ = d.receiveLoop()
 	}()
@@ -106,11 +132,16 @@ func (d *Diverter) Start() (err error) {
 		_ = d.sendLoop()
 	}()
 
+	d.started = true
+
 	return
 }
 
 // Stop gracefully stops the WinDivert session, giving the program time to drain the queue.
 func (d *Diverter) Stop() (err error) {
+	d.critical.Lock()
+	defer d.critical.Unlock()
+
 	// stop new packets from being queued into the send channel
 	close(d.sendChan)
 
@@ -123,6 +154,8 @@ func (d *Diverter) Stop() (err error) {
 	// wait for queue to be drained
 	d.routines.Wait()
 
+	d.started = false
+
 	// shutdown
 	_ = d.l.Shutdown(d.handle, ffi.Both)
 	err = d.Terminate()
@@ -131,18 +164,7 @@ func (d *Diverter) Stop() (err error) {
 
 // Terminate stops the WinDivert session abruptly, causing all packets in the queue to be discarded immediately.
 func (d *Diverter) Terminate() (err error) {
+	d.started = false
 	err = d.l.Close(d.handle)
 	return
-}
-
-func (d *Diverter) SetParam(param ffi.Param, value uint64) (err error) {
-	return d.l.SetParam(d.handle, param, value)
-}
-
-func (d *Diverter) GetParam(param ffi.Param) (value uint64, err error) {
-	return d.l.GetParam(d.handle, param)
-}
-
-func (d *Diverter) FormatFilter(filter ffi.Filter, layer ffi.Layer) (ffi.Filter, error) {
-	return d.l.FormatFilter(filter, layer)
 }

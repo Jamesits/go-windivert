@@ -93,7 +93,7 @@ func watch(mode Mode) {
 		layer := addr.Layer()
 		flags := addr.Flags()
 		priority := addr.Priority()
-		filter, err := d.FormatFilter(ffi.Filter(packet.Content), layer)
+		filter, err := d.LibraryReference().FormatFilter(ffi.Filter(packet.Content), layer)
 		if err != nil {
 			filter = ffi.Filter(packet.Content)
 		}
