@@ -9,6 +9,9 @@ Go bindings for [WinDivert](https://github.com/basil00/Divert).
 - WinDivert 2.2
 - Native support for [google/gopacket](https://github.com/google/gopacket) packet parsing library
 
+TODO:
+- Test 32-bit platforms
+
 ## Usage
 
 ```shell

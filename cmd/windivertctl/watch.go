@@ -105,7 +105,7 @@ func watch(mode Mode) {
 			pid,
 			processName,
 			strings.ToUpper(layer.String()),
-			flagsToString(flags),
+			flags.String(),
 			priority,
 			filter.String(),
 		)

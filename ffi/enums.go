@@ -1,7 +1,9 @@
 package ffi
 
+import "strings"
+
 // Contains constants defined in the library header.
-//go:generate stringer -type=Layer,Event,Flag,Param,Shutdown,Direction,ChecksumFlag -output=enums_string.go -trimprefix=WinDivert -linecomment
+//go:generate stringer -type=Layer,Event,Param,Shutdown,Direction,ChecksumFlag -output=enums_string.go -trimprefix=WinDivert -linecomment
 
 // WINDIVERT_LAYER
 // https://reqrypt.org/windivert-doc.html#divert_layers
@@ -48,6 +50,39 @@ const (
 	NoInstall   Flag = 0x10
 	Fragments   Flag = 0x20
 )
+
+func (flags Flag) String() string {
+	if flags == 0 {
+		return "NONE"
+	}
+
+	sb := strings.Builder{}
+	if flags&Sniff > 0 {
+		sb.WriteString("|SNIFF")
+	}
+
+	if flags&Drop > 0 {
+		sb.WriteString("|DROP")
+	}
+
+	if flags&ReceiveOnly > 0 {
+		sb.WriteString("|RECV_ONLY")
+	}
+
+	if flags&SendOnly > 0 {
+		sb.WriteString("|SEND_ONLY")
+	}
+
+	if flags&NoInstall > 0 {
+		sb.WriteString("|NO_INSTALL")
+	}
+
+	if flags&Fragments > 0 {
+		sb.WriteString("|FRAGMENTS")
+	}
+
+	return sb.String()[1:]
+}
 
 // WINDIVERT_PARAM
 type Param int
