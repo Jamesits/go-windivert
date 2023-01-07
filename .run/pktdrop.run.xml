@@ -1,7 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="pktdrop" type="GoApplicationRunConfiguration" factoryName="Go Application">
-    <module name="godivert" />
+    <module name="go-windivert" />
     <working_directory value="$PROJECT_DIR$" />
+    <sudo value="true" />
     <kind value="PACKAGE" />
     <package value="github.com/jamesits/go-windivert/cmd/pktdrop" />
     <directory value="$PROJECT_DIR$" />

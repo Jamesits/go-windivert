@@ -134,3 +134,15 @@ func (d *Diverter) Terminate() (err error) {
 	err = d.l.Close(d.handle)
 	return
 }
+
+func (d *Diverter) SetParam(param ffi.Param, value uint64) (err error) {
+	return d.l.SetParam(d.handle, param, value)
+}
+
+func (d *Diverter) GetParam(param ffi.Param) (value uint64, err error) {
+	return d.l.GetParam(d.handle, param)
+}
+
+func (d *Diverter) FormatFilter(filter ffi.Filter, layer ffi.Layer) (ffi.Filter, error) {
+	return d.l.FormatFilter(filter, layer)
+}

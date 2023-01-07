@@ -80,15 +80,6 @@ const (
 // Multiple handles should not have the same priority.
 type Priority int16
 
-const (
-	// Max is the highest priority a handle can have.
-	Max Priority = 30000
-	// Default is the default handle priority.
-	Default Priority = 0
-	// Lowest is the lowest priority a handle can have.
-	Lowest Priority = -Max
-)
-
 type ChecksumFlag int64
 
 const (

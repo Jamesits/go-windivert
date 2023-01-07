@@ -95,3 +95,31 @@ func (l *LibraryReference) Send(handle uintptr, packet *Packet) (uint, error) {
 
 	return sendLen, nil
 }
+
+func (l *LibraryReference) SetParam(handle uintptr, param Param, value uint64) (err error) {
+	success, _, err := l.WinDivertSetParam.Call(
+		handle,
+		uintptr(param),
+		uintptr(value),
+	)
+
+	if success == 0 {
+		return err
+	}
+
+	return nil
+}
+
+func (l *LibraryReference) GetParam(handle uintptr, param Param) (value uint64, err error) {
+	success, _, err := l.WinDivertGetParam.Call(
+		handle,
+		uintptr(param),
+		uintptr(unsafe.Pointer(&value)),
+	)
+
+	if success == 0 {
+		return 0, err
+	}
+
+	return value, nil
+}

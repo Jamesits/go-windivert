@@ -6,7 +6,6 @@ import (
 
 const DefaultDLLPath = "WinDivert.dll"
 const DefaultFilter = ffi.Filter("true")
-const DefaultReceiveBufferSize = 65536
 
 type Config struct {
 	DLLPath string
@@ -23,7 +22,7 @@ type Config struct {
 
 func (c *Config) Defaults() {
 	c.Layer = ffi.Network
-	c.Priority = ffi.Default
+	c.Priority = ffi.WinDivertPriorityDefault
 	c.Flag = ffi.Sniff | ffi.ReceiveOnly | ffi.Fragments
 }
 
@@ -37,7 +36,7 @@ func (c *Config) fixMissingValue() {
 	}
 
 	if c.ReceiveBufferSize <= 0 {
-		c.ReceiveBufferSize = DefaultReceiveBufferSize // compatibility setting for jumbo frame (usually 9216, max >=10226) & loopback traffic (>16384)
+		c.ReceiveBufferSize = ffi.WinDivertMTUMax // for loopback traffic, packet size might > 16384
 	}
 }
 
