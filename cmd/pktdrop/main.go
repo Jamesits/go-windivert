@@ -6,15 +6,14 @@
 package main
 
 import (
-	"github.com/jamesits/go-windivert/ffi"
-	diverter2 "github.com/jamesits/go-windivert/pkg/diverter"
-	ffi2 "github.com/jamesits/go-windivert/pkg/ffi"
+	"github.com/jamesits/go-windivert/pkg/diverter"
+	"github.com/jamesits/go-windivert/pkg/ffi"
 	"log"
 	"os"
 	"os/signal"
 )
 
-var d *diverter2.Diverter
+var d *diverter.Diverter
 
 func main() {
 	var err error
@@ -26,15 +25,15 @@ func main() {
 
 	log.Printf("packet filter: %s\n", filter)
 
-	config := diverter2.Config{
+	config := diverter.Config{
 		DLLPath:  "WinDivert.dll",
-		Layer:    ffi2.Network,
-		Priority: ffi.Lowest,
-		Flag:     ffi2.Drop,
-		Filter:   ffi2.Filter(filter),
+		Layer:    ffi.Network,
+		Priority: ffi.WinDivertPriorityLowest,
+		Flag:     ffi.Drop,
+		Filter:   ffi.Filter(filter),
 	}
 
-	d, err = diverter2.New(&config)
+	d, err = diverter.New(&config)
 	if err != nil {
 		panic(err)
 	}

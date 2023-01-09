@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	diverter2 "github.com/jamesits/go-windivert/pkg/diverter"
-	ffi2 "github.com/jamesits/go-windivert/pkg/ffi"
+	"github.com/jamesits/go-windivert/pkg/diverter"
+	"github.com/jamesits/go-windivert/pkg/ffi"
 	"log"
 	"strings"
 	"time"
@@ -12,20 +12,20 @@ import (
 func watch(mode Mode) {
 	var err error
 
-	config := diverter2.Config{
+	config := diverter.Config{
 		DLLPath:      "WinDivert.dll",
 		Filter:       filter,
-		Layer:        ffi2.Reflect,
+		Layer:        ffi.Reflect,
 		Priority:     priority,
-		Flag:         ffi2.Sniff | ffi2.ReceiveOnly,
-		RecvChanSize: ffi2.WinDivertParamQueueLengthMax,
+		Flag:         ffi.Sniff | ffi.ReceiveOnly,
+		RecvChanSize: ffi.WinDivertParamQueueLengthMax,
 	}
 
 	if mode == Watch {
-		config.Flag |= ffi2.NoInstall
+		config.Flag |= ffi.NoInstall
 	}
 
-	d, err := diverter2.New(&config)
+	d, err := diverter.New(&config)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -39,17 +39,17 @@ func watch(mode Mode) {
 		log.Panic(err)
 	}
 
-	err = d.SetParam(ffi2.QueueLength, ffi2.WinDivertParamQueueLengthMax)
+	err = d.SetParam(ffi.QueueLength, ffi.WinDivertParamQueueLengthMax)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	err = d.SetParam(ffi2.QueueSize, ffi2.WinDivertParamQueueSizeMax)
+	err = d.SetParam(ffi.QueueSize, ffi.WinDivertParamQueueSizeMax)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	err = d.SetParam(ffi2.QueueTime, ffi2.WinDivertParamQueueTimeMax)
+	err = d.SetParam(ffi.QueueTime, ffi.WinDivertParamQueueTimeMax)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -64,14 +64,14 @@ func watch(mode Mode) {
 
 		var operation string
 		switch packet.Address.Event() {
-		case ffi2.ReflectOpen:
+		case ffi.ReflectOpen:
 			if mode == Uninstall || mode == Kill {
 				operation = "KILL"
 			} else {
 				operation = "OPEN"
 			}
 
-		case ffi2.ReflectClose:
+		case ffi.ReflectClose:
 			if mode == Watch {
 				operation = "CLOSE"
 			} else {
@@ -93,9 +93,9 @@ func watch(mode Mode) {
 		layer := addr.Layer()
 		flags := addr.Flags()
 		priority := addr.Priority()
-		filter, err := d.LibraryReference().FormatFilter(ffi2.Filter(packet.Content), layer)
+		filter, err := d.LibraryReference().FormatFilter(ffi.Filter(packet.Content), layer)
 		if err != nil {
-			filter = ffi2.Filter(packet.Content)
+			filter = ffi.Filter(packet.Content)
 		}
 
 		fmt.Printf(

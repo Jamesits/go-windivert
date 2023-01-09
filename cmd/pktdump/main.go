@@ -6,7 +6,7 @@ package main
 
 import (
 	"encoding/binary"
-	diverter2 "github.com/jamesits/go-windivert/pkg/diverter"
+	"github.com/jamesits/go-windivert/pkg/diverter"
 	"log"
 	"os"
 	"os/signal"
@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-var d *diverter2.Diverter
+var d *diverter.Diverter
 var cleanupOnce sync.Once
 
 func cleanup() {
@@ -50,7 +50,7 @@ func main() {
 	})
 
 	// configure WinDivert
-	d, err = diverter2.New(diverter2.NewDefaultDiverterConfig("WinDivert.dll", "true"))
+	d, err = diverter.New(diverter.NewDefaultDiverterConfig("WinDivert.dll", "true"))
 	if err != nil {
 		panic(err)
 	}
