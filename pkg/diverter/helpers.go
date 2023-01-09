@@ -1,6 +1,8 @@
 package diverter
 
-import "github.com/jamesits/go-windivert/ffi"
+import (
+	"github.com/jamesits/go-windivert/pkg/ffi"
+)
 
 func (d *Diverter) SetParam(param ffi.Param, value uint64) (err error) {
 	d.critical.Lock()

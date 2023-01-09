@@ -23,4 +23,4 @@ Examples using the high-level interface (channel based):
 - [Packet injection](cmd/pktloopback/main.go)
 - [Packet content parsing](cmd/pktcount/main.go)
 
-All [Low-level interfaces](ffi/library.go) and [simple wrappers](ffi/wrapper.go) are also available for more than average needs.
+All [Low-level interfaces](pkg/ffi/library.go) and [simple wrappers](pkg/ffi/wrapper.go) are also available for more than average needs.

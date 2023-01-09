@@ -6,14 +6,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/jamesits/go-windivert/diverter"
-	"github.com/jamesits/go-windivert/ffi"
+	diverter2 "github.com/jamesits/go-windivert/pkg/diverter"
+	"github.com/jamesits/go-windivert/pkg/ffi"
 	"os"
 	"os/signal"
 	"sync"
 )
 
-var d *diverter.Diverter
+var d *diverter2.Diverter
 var cleanupOnce sync.Once
 
 func cleanup() {
@@ -28,13 +28,13 @@ func cleanup() {
 func main() {
 	var err error
 
-	config := diverter.Config{
+	config := diverter2.Config{
 		DLLPath: "WinDivert.dll",
 		Flag:    ffi.Fragments,
 		Filter:  "icmp",
 	}
 
-	d, err = diverter.New(&config)
+	d, err = diverter2.New(&config)
 	if err != nil {
 		panic(err)
 	}
