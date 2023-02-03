@@ -1,10 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Test ffi" type="GoTestRunConfiguration" factoryName="Go Test">
     <module name="go-windivert" />
-    <working_directory value="$PROJECT_DIR$/ffi" />
+    <working_directory value="$PROJECT_DIR$/pkg/ffi" />
     <root_directory value="$PROJECT_DIR$" />
     <kind value="PACKAGE" />
-    <package value="github.com/jamesits/go-windivert/ffi" />
+    <package value="github.com/jamesits/go-windivert/pkg/ffi" />
     <directory value="$PROJECT_DIR$" />
     <filePath value="$PROJECT_DIR$" />
     <framework value="gotest" />

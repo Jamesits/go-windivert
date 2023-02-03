@@ -8,7 +8,7 @@ var networkByteOrder = binary.BigEndian
 const filterBufferLength = 65536
 
 // where to look for WinDivert DLL and SYS files for unit testing
-const defaultDLLLookupPathForTesting = "..\\WinDivert.dll"
+const defaultDLLLookupPathForTesting = "..\\..\\WinDivert.dll"
 
 const WinDivertPriorityHighest = Priority(30000)
 const WinDivertPriorityDefault = Priority(0)

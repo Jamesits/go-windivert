@@ -7,9 +7,11 @@ package main
 import (
 	"encoding/binary"
 	"github.com/jamesits/go-windivert/pkg/diverter"
+	"github.com/jamesits/goinvoke/utils"
 	"log"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"sync"
 	"time"
 )
@@ -50,7 +52,11 @@ func main() {
 	})
 
 	// configure WinDivert
-	d, err = diverter.New(diverter.NewDefaultDiverterConfig("WinDivert.dll", "true"))
+	ep, err := utils.ExecutableDir()
+	if err != nil {
+		panic(err)
+	}
+	d, err = diverter.New(diverter.NewDefaultDiverterConfig(filepath.Join(ep, "WinDivert.dll"), "true"))
 	if err != nil {
 		panic(err)
 	}

@@ -4,9 +4,10 @@ go 1.19
 
 require (
 	github.com/google/gopacket v1.1.19
+	github.com/jamesits/goinvoke v0.0.0-20230203172449-2228e627ce88
 	github.com/shirou/gopsutil/v3 v3.22.12
 	github.com/stretchr/testify v1.8.1
-	golang.org/x/sys v0.3.0
+	golang.org/x/sys v0.4.0
 )
 
 require (

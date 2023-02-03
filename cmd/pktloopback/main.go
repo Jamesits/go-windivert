@@ -8,8 +8,10 @@ import (
 	"fmt"
 	"github.com/jamesits/go-windivert/pkg/diverter"
 	"github.com/jamesits/go-windivert/pkg/ffi"
+	"github.com/jamesits/goinvoke/utils"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"sync"
 )
 
@@ -28,8 +30,13 @@ func cleanup() {
 func main() {
 	var err error
 
+	ep, err := utils.ExecutableDir()
+	if err != nil {
+		panic(err)
+	}
+
 	config := diverter.Config{
-		DLLPath: "WinDivert.dll",
+		DLLPath: filepath.Join(ep, "WinDivert.dll"),
 		Flag:    ffi.Fragments,
 		Filter:  "icmp",
 	}

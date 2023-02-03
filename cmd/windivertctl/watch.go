@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"github.com/jamesits/go-windivert/pkg/diverter"
 	"github.com/jamesits/go-windivert/pkg/ffi"
+	"github.com/jamesits/goinvoke/utils"
 	"log"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -12,8 +14,13 @@ import (
 func watch(mode Mode) {
 	var err error
 
+	ep, err := utils.ExecutableDir()
+	if err != nil {
+		panic(err)
+	}
+
 	config := diverter.Config{
-		DLLPath:      "WinDivert.dll",
+		DLLPath:      filepath.Join(ep, "WinDivert.dll"),
 		Filter:       filter,
 		Layer:        ffi.Reflect,
 		Priority:     priority,

@@ -2,19 +2,19 @@ package diverter
 
 import (
 	"errors"
-	ffi2 "github.com/jamesits/go-windivert/pkg/ffi"
+	"github.com/jamesits/go-windivert/pkg/ffi"
 	"golang.org/x/sys/windows"
 	"sync"
 )
 
 type Diverter struct {
-	sendChan chan *ffi2.Packet
-	recvChan chan *ffi2.Packet
+	sendChan chan *ffi.Packet
+	recvChan chan *ffi.Packet
 
-	l      *ffi2.LibraryReference
+	l      *ffi.LibraryReference
 	c      *Config
 	handle uintptr
-	params map[ffi2.Param]uint64
+	params map[ffi.Param]uint64
 
 	openOnce sync.Once
 	routines sync.WaitGroup
@@ -28,15 +28,16 @@ func New(config *Config) (ret *Diverter, err error) {
 	ret = &Diverter{
 		c:       config,
 		handle:  uintptr(windows.InvalidHandle),
-		params:  map[ffi2.Param]uint64{},
+		params:  map[ffi.Param]uint64{},
 		started: false,
 	}
-	ret.l, err = ffi2.NewDLLReference(ret.c.DLLPath)
+	ret.l = &ffi.LibraryReference{}
+	err = ret.l.Unmarshal(ret.c.DLLPath)
 
 	return
 }
 
-func (d *Diverter) LibraryReference() *ffi2.LibraryReference {
+func (d *Diverter) LibraryReference() *ffi.LibraryReference {
 	return d.l
 }
 
@@ -44,11 +45,11 @@ func (d *Diverter) Handle() uintptr {
 	return d.handle
 }
 
-func (d *Diverter) SendChan() chan<- *ffi2.Packet {
+func (d *Diverter) SendChan() chan<- *ffi.Packet {
 	return d.sendChan
 }
 
-func (d *Diverter) RecvChan() <-chan *ffi2.Packet {
+func (d *Diverter) RecvChan() <-chan *ffi.Packet {
 	return d.recvChan
 }
 
@@ -67,7 +68,7 @@ func (d *Diverter) sendLoop() (err error) {
 		return
 	}
 
-	err = d.l.Shutdown(d.handle, ffi2.Send)
+	err = d.l.Shutdown(d.handle, ffi.Send)
 	return
 }
 
@@ -75,7 +76,7 @@ func (d *Diverter) receiveLoop() (err error) {
 	d.routines.Add(1)
 	defer d.routines.Done()
 
-	var pkt *ffi2.Packet
+	var pkt *ffi.Packet
 	for {
 		pkt, err = d.l.Recv(d.handle, d.c.ReceiveBufferSize)
 		if err != nil {
@@ -94,7 +95,7 @@ func (d *Diverter) receiveLoop() (err error) {
 		return
 	}
 
-	err = d.l.Shutdown(d.handle, ffi2.Recv)
+	err = d.l.Shutdown(d.handle, ffi.Recv)
 	return
 }
 
@@ -106,8 +107,8 @@ func (d *Diverter) Start() (err error) {
 	d.routines.Add(1)
 	defer d.routines.Done()
 
-	d.sendChan = make(chan *ffi2.Packet, d.c.SendChanSize)
-	d.recvChan = make(chan *ffi2.Packet, d.c.RecvChanSize)
+	d.sendChan = make(chan *ffi.Packet, d.c.SendChanSize)
+	d.recvChan = make(chan *ffi.Packet, d.c.RecvChanSize)
 
 	d.handle, err = d.l.Open(d.c.Filter, d.c.Layer, d.c.Priority, d.c.Flag)
 	if errors.Is(err, windows.ERROR_SUCCESS) {
@@ -146,7 +147,7 @@ func (d *Diverter) Stop() (err error) {
 	close(d.sendChan)
 
 	// stop new packets from being received
-	err = d.l.Shutdown(d.handle, ffi2.Recv)
+	err = d.l.Shutdown(d.handle, ffi.Recv)
 	if err != nil {
 		return
 	}
@@ -157,7 +158,7 @@ func (d *Diverter) Stop() (err error) {
 	d.started = false
 
 	// shutdown
-	_ = d.l.Shutdown(d.handle, ffi2.Both)
+	_ = d.l.Shutdown(d.handle, ffi.Both)
 	err = d.Terminate()
 	return
 }

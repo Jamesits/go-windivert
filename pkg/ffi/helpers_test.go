@@ -25,7 +25,8 @@ var IncorrectFilters = [...]Filter{
 }
 
 func TestHelperCompileFiltersCorrect(t *testing.T) {
-	l, err := NewDLLReference(defaultDLLLookupPathForTesting)
+	l := LibraryReference{}
+	err := l.Unmarshal(defaultDLLLookupPathForTesting)
 	assert.NoError(t, err)
 
 	for _, f0 := range CorrectFilters {
@@ -44,7 +45,8 @@ func TestHelperCompileFiltersCorrect(t *testing.T) {
 }
 
 func TestHelperFormatFilter(t *testing.T) {
-	l, err := NewDLLReference(defaultDLLLookupPathForTesting)
+	l := LibraryReference{}
+	err := l.Unmarshal(defaultDLLLookupPathForTesting)
 	assert.NoError(t, err)
 
 	for _, f0 := range CorrectFilters {
@@ -63,7 +65,8 @@ func TestHelperFormatFilter(t *testing.T) {
 }
 
 func TestHelperCompileFiltersIncorrect(t *testing.T) {
-	l, err := NewDLLReference(defaultDLLLookupPathForTesting)
+	l := LibraryReference{}
+	err := l.Unmarshal(defaultDLLLookupPathForTesting)
 	assert.NoError(t, err)
 
 	for _, f0 := range IncorrectFilters {

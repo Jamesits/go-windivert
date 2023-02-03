@@ -9,6 +9,7 @@
     <package value="github.com/jamesits/go-windivert/cmd/windivertctl" />
     <directory value="$PROJECT_DIR$" />
     <filePath value="$PROJECT_DIR$" />
+    <output_directory value="$PROJECT_DIR$" />
     <method v="2" />
   </configuration>
 </component>
