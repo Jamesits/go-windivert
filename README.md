@@ -1,6 +1,6 @@
 # go-windivert
 
-Go bindings for [WinDivert](https://github.com/basil00/Divert).
+Go bindings for [WinDivert](https://github.com/basil00/Divert). Currently WIP, API might change.
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/Jamesits/go-windivert.svg)](https://pkg.go.dev/github.com/Jamesits/go-windivert)
 
